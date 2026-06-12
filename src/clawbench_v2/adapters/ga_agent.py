@@ -128,6 +128,11 @@ class GaAgentAdapter(BaseAdapter):
                 from agent_loop import agent_runner_loop
                 from ga import GenericAgentHandler
 
+                # Benchmark isolation: strip memory/SOP tools that could leak cross-task knowledge.
+                # Only keep task-execution tools (file I/O, code_run, web, ask_user).
+                _BLOCKED_TOOLS = {"update_working_checkpoint", "start_long_term_update"}
+                bench_tools = [t for t in TOOLS_SCHEMA if t.get("function", {}).get("name") not in _BLOCKED_TOOLS]
+
                 # Reuse client across rounds of the same session (preserves backend.history for multi-round tasks)
                 session_id = ctx.session_id
                 if session_id and session_id in self._client_cache:
@@ -237,7 +242,7 @@ class GaAgentAdapter(BaseAdapter):
                         self._get_bench_system_prompt(),
                         prompt,
                         handler,
-                        TOOLS_SCHEMA,
+                        bench_tools,
                         max_turns=remaining_turns,
                         verbose=False,
                         initial_user_content=multimodal_content,
