@@ -1,2 +1,0 @@
-"""ClawBenchv2 package."""
-

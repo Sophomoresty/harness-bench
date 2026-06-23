@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "clawbench-v2"
+name = "harnessbench"
 version = "0.1.0"
 description = "Real-workspace benchmark with pluggable adapters"
 requires-python = ">=3.10"
